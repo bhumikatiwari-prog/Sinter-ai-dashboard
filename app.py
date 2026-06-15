@@ -94,10 +94,13 @@ st.divider()
 st.subheader("🎯 Real-Time Predictions")
 
 r1, r2, r3 = st.columns(3)
-ti_color = "normal" if pred_TI >= 80 else "error"
-rdi_color = "normal" if pred_RDI <= 21 else "error"
-ri_color = "normal" if pred_RI >= 75 else "error"
 
-r1.metric(label="Predicted TI (>80%)", value=f"{pred_TI:.2f}%", delta_color=ti_color)
-r2.metric(label="Predicted RDI (<21%)", value=f"{pred_RDI:.2f}%", delta_color=rdi_color)
-r3.metric(label="Predicted RI (>75%)", value=f"{pred_RI:.2f}%", delta_color=ri_color)
+# Calculate how far the prediction is from your targets
+delta_ti = pred_TI - 80.0
+delta_rdi = pred_RDI - 21.0
+delta_ri = pred_RI - 75.0
+
+# For TI and RI, higher is better (normal). For RDI, lower is better (inverse).
+r1.metric(label="Predicted TI (>80%)", value=f"{pred_TI:.2f}%", delta=f"{delta_ti:.2f}%", delta_color="normal")
+r2.metric(label="Predicted RDI (<21%)", value=f"{pred_RDI:.2f}%", delta=f"{delta_rdi:.2f}%", delta_color="inverse")
+r3.metric(label="Predicted RI (>75%)", value=f"{pred_RI:.2f}%", delta=f"{delta_ri:.2f}%", delta_color="normal")
